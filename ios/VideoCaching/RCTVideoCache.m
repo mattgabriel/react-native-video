@@ -28,6 +28,7 @@
     options.garbageCollectionInterval = (NSUInteger)(1.5 * SPTPersistentCacheDefaultGCIntervalSec);
     options.sizeConstraintBytes = 1024 * 1024 * 100;
     options.useDirectorySeparation = NO;
+    NSLog(@"Video Cache");
 #ifdef DEBUG
     options.debugOutput = ^(NSString *string) {
       NSLog(@"Video Cache: %@", string);
@@ -55,6 +56,7 @@
 
 - (void)storeItem:(NSData *)data forUri:(NSString *)uri withCallback:(void(^)(BOOL))handler;
 {
+  NSLog(@"storeItem");
   NSString *key = [self generateCacheKeyForUri:uri];
   if (key == nil) {
     handler(NO);
@@ -75,15 +77,17 @@
 }
 
 - (AVURLAsset *)getItemFromTemporaryStorage:(NSString *)key {
-  NSString * temporaryFilePath = [self.temporaryCachePath stringByAppendingPathComponent:key];
+  NSLog(@"getItemFromTemporaryStorage");
+  return nil;
+  // NSString * temporaryFilePath = [self.temporaryCachePath stringByAppendingPathComponent:key];
   
-  BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:temporaryFilePath];
-  if (!fileExists) {
-    return nil;
-  }
-  NSURL *assetUrl = [[NSURL alloc] initFileURLWithPath:temporaryFilePath];
-  AVURLAsset *asset = [AVURLAsset URLAssetWithURL:assetUrl options:nil];
-  return asset;
+  // BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:temporaryFilePath];
+  // if (!fileExists) {
+  //   return nil;
+  // }
+  // NSURL *assetUrl = [[NSURL alloc] initFileURLWithPath:temporaryFilePath];
+  // AVURLAsset *asset = [AVURLAsset URLAssetWithURL:assetUrl options:nil];
+  // return asset;
 }
 
 - (BOOL)saveDataToTemporaryStorage:(NSData *)data key:(NSString *)key {
@@ -128,6 +132,7 @@
 
 - (void)getItemForUri:(NSString *)uri withCallback:(void(^)(RCTVideoCacheStatus, AVAsset * _Nullable)) handler {
   @try {
+  	NSLog(@"getItemForUri");
     NSString *key = [self generateCacheKeyForUri:uri];
     AVURLAsset * temporaryAsset = [self getItemFromTemporaryStorage:key];
     if (temporaryAsset != nil) {
